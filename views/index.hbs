@@ -1,17 +1,24 @@
 
 
 
+<div style="position: relative;">
+ <canvas id="layer1" width="700" height="700"
+   style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+ <canvas id="layer2" width="700" height="700"
+   style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+</div>
 
-<canvas id="myCanvas" style="width: 700px; height: 700px; border:3px solid black;"></canvas>
 
 <ul>
   <li><input type="range" id="colorRGB" min="0" value="255" max="255" step="1"></li>
   <li><input type="range" id="colorGreen" min="0" value="255" max="255" step="1"></li>
   <li><input type="range" id="colorBlue" min="0" value="255" max="255" step="1"></li>
+  <li><input type="text" id="colorInput" name="color" value="" placeholder="color"></li>
+  <<li><button id="btn">change color</button></li>
 </ul>
 
 
-<input type="text" id="colorInput" name="color" value="" placeholder="color">
-<button id="btn">change color</button>
+
+
 
 

@@ -97,7 +97,19 @@ function createAudioElement(file){
     //     if()
     // }
 
-     var canvas = document.getElementById('myCanvas');
+    var cvas = document.getElementById('layer2');
+    var cxt = cvas.getContext('2d')
+    function drawBackground(){
+      var cvas = document.getElementById('layer2');
+      var cxt = cvas.getContext('2d')
+
+      cxt.fillStyle = 'green';
+      cxt.fillRect(0, 0, 500, 500);
+    }
+
+    drawBackground()
+
+     var canvas = document.getElementById('layer1');
      var ctx = canvas.getContext('2d')
 
      function draw(){
@@ -120,7 +132,7 @@ function createAudioElement(file){
 
       for(var i = 0; i < 1024; i++) {
 
-        var v = arr[i] / 250.0;
+        var v = arr[i] / 230.0;
         // console.log(v, '----this is v')
 
         // console.log('canvas height: ', canvas.height, " i: ", arr[i])
@@ -138,15 +150,15 @@ function createAudioElement(file){
 
         if (x % 2 === 0 && x % 5 ===0){
           ctx.fillStyle = app.value
-          ctx.fillRect(x, y, v + 2, 40);
+          ctx.fillRect(x, y, v + 2, 100);
         }
         else if (x % 2 === 0){
           ctx.fillStyle = randRGB('blue', app.gValue);
-          ctx.fillRect(x, y, v + 2, 40);
+          ctx.fillRect(x, y, v + 2, 100);
         }
         else {
           ctx.fillStyle = 'rgb(' + app.rValue + ',' + app.gValue + ',' + app.bValue + ')'
-          ctx.fillRect(x, y, v + 2, 40);
+          ctx.fillRect(x, y, v + 2, 100);
         }
 
         // if (x > 0 && x < 100){
@@ -167,8 +179,8 @@ function createAudioElement(file){
 
 
 
-          if (x > 600){
-            x -= sliceWidth -100;
+          if (x > 700){
+            x -= sliceWidth;
           }
           else {
             x += sliceWidth;
