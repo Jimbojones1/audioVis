@@ -3,35 +3,92 @@ app.value = 'purple';
 app.rValue = '255';
 app.bValue = '255';
 app.gValue =  '255';
+app.height =  100;
+app.heightTwo = 200;
+app.width = 2;
+app.widthTwo = 3;
+app.spacing = 20;
+app.white = 20;
+app.x = 30
+app.lineWidth = 1
+app.squareMode = true;
 window.onload = function () {
     console.log('audio script loaded');
 
     var input = document.getElementById('colorInput');
-    var sliderRed = document.getElementById('colorRGB')
-    var sliderGreen = document.getElementById('colorGreen')
-    var sliderBlue = document.getElementById('colorBlue')
+    var sliderRed = document.getElementById('colorRGB');
+    var sliderGreen = document.getElementById('colorGreen');
+    var sliderBlue = document.getElementById('colorBlue');
 
+    var heightOne = document.getElementById('heightOne');
+    var heightTwo = document.getElementById('heightTwo');
+
+    var width = document.getElementById('width');
     var btn   = document.getElementById('btn');
+
+    var spacing = document.getElementById('spacing');
+    var spacingTwo = document.getElementById('spacingTwo')
+
+    var circleModeBtn = document.getElementById('circleMode');
+
+    var boxControls  = document.getElementById('boxControls')
 
     sliderRed.addEventListener('input', function(){
       console.log('something', sliderRed.value)
-      app.rValue = sliderRed.value;
+      app.rValue = this.value;
     })
 
     sliderBlue.addEventListener('input', function(){
       console.log('something', sliderBlue.value)
-      app.bValue = sliderBlue.value;
+      app.bValue = this.value;
     })
 
     sliderGreen.addEventListener('input', function(){
       console.log('something', sliderGreen.value)
-      app.gValue = sliderGreen.value;
+      app.gValue = this.value;
     })
 
+
+    heightOne.addEventListener('input', function(){
+      console.log('something', this.value, heightOne.value)
+      app.height = this.value;
+    })
+
+
+    heightTwo.addEventListener('input', function(){
+      console.log('something', this.value, heightTwo.value)
+
+      app.heightTwo = this.value;
+    })
+
+    width.addEventListener('input', function(){
+      console.log('something', width.value)
+      app.width = parseInt(this.value);
+    })
+
+    spacing.addEventListener('input', function(){
+      console.log('spacing', spacing.value)
+      app.spacing = parseInt(this.value);
+    })
+
+    spacingTwo.addEventListener('input', function(){
+      console.log('spacing', spacing.value)
+      app.widthTwo = parseInt(this.value);
+    })
 
     btn.addEventListener('click', function(){
       app.value = grabInputValue(input)
     });
+
+    circleMode.addEventListener('click', function(){
+      console.log('circle mode', this.value)
+      app.squareMode = !app.squareMode;
+
+      app.squareMode ? changeInputNames('square', heightOne, heightTwo) : changeInputNames('circle', heightOne, heightTwo)
+
+    })
+
+
 
     window.addEventListener('drop', onDrop, false);
     window.addEventListener('dragover', onDrag, false);
@@ -57,6 +114,38 @@ window.onload = function () {
         // return false
     }
 } // end of window.onload
+
+
+function changeInputNames(modeControls, controlOne, controlTwo){
+
+  if(modeControls === 'circle'){
+    controlOne.labels[0].innerHTML = 'radius';
+    controlTwo.labels[0].style.display = 'none';
+    controlTwo.style.display = 'none'
+  }
+  else if(modeControls === 'square'){
+    controlOne.labels[0].innerHTML = 'HeightOne';
+    controlTwo.labels[0].style.display = 'inline-block';
+    controlTwo.style.display = 'inline-block'
+
+  }
+
+
+
+}
+
+
+function elementCreater(element, className, type, min, max, value, step){
+  console.log(min)
+    var element = document.createElement(element);
+    element.type = type;
+    element.min  = min || null;
+    element.max  = max || null;
+    element.value = value || null;
+    element.step = step || null;
+    element.className = className || '';
+    return element
+}
 
 
 
@@ -118,8 +207,8 @@ function createAudioElement(file){
         // ctx.lineWidth = 50;
         // ctx.strokeStyle = randColor();
         // ctx.beginPath();
-         console.log(arrTwo, ' arr')
-      var sliceWidth = 5;
+
+      var sliceWidth = app.spacing;
       var x = 0;
 
       for(var i = 0; i < 1024; i++) {
@@ -131,20 +220,22 @@ function createAudioElement(file){
         // console.log('canvas height: ', canvas.height, " i: ", arr[i])
         var y = v * (cvas.height / 2);
 
-        if(i === 0) {
-          console.log(' if hit', x, y)
+        if(i === 0){
           cxt.moveTo(x, y);
         }
         else {
-          cxt.fillStyle = 'white';
-          cxt.fillRect(x, y, v + 4, 20);
+          if(app.squareMode){
+            cxt.fillStyle = 'white';
+            cxt.fillRect(x, y, app.white, v + 3);
+          }
+
+
         }
 
           if (x > 700){
             x -= sliceWidth;
           }
           else {
-            cxt.fillStyle = 'white';
             x += sliceWidth;
           }
         }//end of llops
@@ -182,17 +273,18 @@ function createAudioElement(file){
         // console.log(bufferLength, ' this is bufferLength')
 
         analyzer.getByteFrequencyData(arr);
-
+        analyzer.getByteFrequencyData(arrTwo);
         // ctx.lineWidth = 50;
         // ctx.strokeStyle = randColor();
         // ctx.beginPath();
 
-      var sliceWidth = 5;
+      var sliceWidth = app.spacing;
       var x = 0;
 
       for(var i = 0; i < 1024; i++) {
 
         var v = arr[i] / 230.0;
+        var k = arrTwo[i] / 400;
         // console.log(v, '----this is v')
 
         // console.log('canvas height: ', canvas.height, " i: ", arr[i])
@@ -209,17 +301,87 @@ function createAudioElement(file){
 
 
         if (x % 2 === 0 && x % 5 ===0){
-          ctx.fillStyle = app.value
-          ctx.fillRect(x, y, v + 2, 100);
+
+          if(app.squareMode){
+            ctx.fillStyle = app.value
+            ctx.fillRect(x, y, v + app.width, app.height);
+            ctx.fillStyle = 'rgb(' + app.rValue + ',' + app.gValue + ',' + app.bValue + ')'
+            ctx.fillRect(x + 3, y + 3, k + app.widthTwo, app.heightTwo)
+          }
+          else{
+
+            createCirles(40, 30, ctx, x, y, v)
+            // ctx.beginPath();
+            // ctx.arc(x + 3, y, v * app.height, 0, 2 * Math.PI, false);
+            // ctx.lineWidth = 0.5;
+            // ctx.strokeStyle = app.value;
+            // ctx.fillStyle = randColor();
+            // ctx.fill();
+            // ctx.stroke();
+            // // ctx.arc(x + 3, y - 50, v + app.width, 0, 2 * Math.PI, false);
+            // // ctx.arc(x + 3, y - 100, v + app.width, 0, 2 * Math.PI, false);
+            // ctx.beginPath();
+            // ctx.moveTo(x + 3, y + 30)
+            // ctx.arc(x + 20, y + 30, v * app.height, 0, Math.cos(2 * Math.PI) * 100, false);
+            // ctx.strokeStyle = app.value;
+            // ctx.fillStyle = randColor();
+            // ctx.fill();
+            // ctx.stroke();
+
+
+            // ctx.beginPath();
+            // ctx.moveTo(x + 3, y + 60)
+            // ctx.arc(x + 3, y + 60, v * app.height, 0, Math.cos(2 * Math.PI), false);
+            // ctx.fillStyle = randColor();
+            // ctx.fill();
+            // ctx.fillStyle = randColor();
+            // ctx.fill();
+            // ctx.stroke();
+          }
+
+
         }
         else if (x % 2 === 0){
           ctx.fillStyle = randRGB('blue', app.gValue);
           ctx.fillRect(x, y, v + 2, 100);
         }
         else {
-          ctx.fillStyle = 'rgb(' + app.rValue + ',' + app.gValue + ',' + app.bValue + ')'
-          ctx.fillRect(x, y, v + 2, 100);
+
+          if(app.squareMode){
+            ctx.fillStyle = 'rgb(' + app.rValue + ',' + app.gValue + ',' + app.bValue + ')' || 'black'
+            ctx.fillRect(x, y, v + app.width, app.height);
+            ctx.fillStyle = 'rgb(' + app.gValue + ',' + app.rValue + ',' + app.bValue + ')' || 'black'
+            ctx.fillRect(x + 3, y + app.width + 1, k + app.widthTwo, app.heightTwo);
+          }
+          else {
+            // ctx.beginPath();
+            // ctx.arc(x + 3, y, v * app.height, 0, 2 * Math.PI, false);
+            // ctx.lineWidth = 0.5;
+            // ctx.strokeStyle = app.value;
+            // ctx.fillStyle = randColor();
+            // ctx.fill();
+            // ctx.stroke();
+            // // ctx.arc(x + 3, y - 50, v + app.width, 0, 2 * Math.PI, false);
+            // // ctx.arc(x + 3, y - 100, v + app.width, 0, 2 * Math.PI, false);
+            // ctx.beginPath();
+            // ctx.moveTo(x + 3, y + 30)
+            // ctx.arc(x + 3, y + 30, v * app.height, 0, 2 * Math.PI, false);
+            // ctx.strokeStyle = app.value;
+            // ctx.fillStyle = randColor();
+            // ctx.fill();
+            // ctx.stroke();
+
+
+            // ctx.beginPath();
+            // ctx.moveTo(x + 3, y + 60)
+            // ctx.arc(x + 3, y + 60, v * app.height, 0, 2 * Math.PI, false);
+            // ctx.fillStyle = randColor();
+            // ctx.fill();
+            // ctx.stroke();
+          }
+
         }
+
 
         // if (x > 0 && x < 100){
         //   ctx.fillStyle = randRGB('blue')
@@ -240,7 +402,7 @@ function createAudioElement(file){
 
 
           if (x > 700){
-            x -= sliceWidth;
+            x -= sliceWidth - 500;
           }
           else {
             x += sliceWidth;
@@ -253,6 +415,24 @@ function createAudioElement(file){
         draw()
 
 };
+
+
+function createCirles(numberOfCirlces, distance, ctx, x, y, v){
+
+  for (var i = 0; i < numberOfCirlces; i ++){
+
+
+      ctx.moveTo(x + 3, y + distance)
+      ctx.beginPath();
+      ctx.arc(x + app.x, y + distance, v * app.height, 0, 2 * Math.PI, false);
+      ctx.lineWidth = app.lineWidth;
+      ctx.strokeStyle = app.value;
+      ctx.fillStyle = randColor();
+      ctx.fill();
+      ctx.stroke();
+      distance += 30
+  }
+}
 
 
 function randColor(){
