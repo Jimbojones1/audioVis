@@ -86,6 +86,7 @@ function createAudioElement(file){
     var bufferLength = analyzer.frequencyBinCount;
     var arr = new  Uint8Array(bufferLength);
 
+    var arrTwo = new Uint8Array(bufferLength)
 
     // getFloatTimeDomainData gets the current waveform being played
     // analyzer.fftSize is a constant which denotes the size of the Fast Fourier Transform
@@ -99,15 +100,74 @@ function createAudioElement(file){
 
     var cvas = document.getElementById('layer2');
     var cxt = cvas.getContext('2d')
-    function drawBackground(){
-      var cvas = document.getElementById('layer2');
-      var cxt = cvas.getContext('2d')
 
-      cxt.fillStyle = 'green';
-      cxt.fillRect(0, 0, 500, 500);
-    }
 
-    drawBackground()
+    function drawLayer1(){
+        requestAnimationFrame(drawLayer1);
+
+
+        // cxt.fillStyle = 'black';
+        // cxt.fillRect(0, 0, 500, 500)
+        cxt.clearRect(0, 0, cvas.width, cvas.height)
+
+        // console.log(arr)
+        // console.log(bufferLength, ' this is bufferLength')
+
+        analyzer.getByteFrequencyData(arrTwo);
+
+        // ctx.lineWidth = 50;
+        // ctx.strokeStyle = randColor();
+        // ctx.beginPath();
+         console.log(arrTwo, ' arr')
+      var sliceWidth = 5;
+      var x = 0;
+
+      for(var i = 0; i < 1024; i++) {
+
+        var v = arrTwo[i] / 180.0;
+
+        // console.log(v, '----this is v')
+
+        // console.log('canvas height: ', canvas.height, " i: ", arr[i])
+        var y = v * (cvas.height / 2);
+
+        if(i === 0) {
+          console.log(' if hit', x, y)
+          cxt.moveTo(x, y);
+        }
+        else {
+          cxt.fillStyle = 'white';
+          cxt.fillRect(x, y, v + 4, 20);
+        }
+
+          if (x > 700){
+            x -= sliceWidth;
+          }
+          else {
+            cxt.fillStyle = 'white';
+            x += sliceWidth;
+          }
+        }//end of llops
+      }//end of draw layer
+
+    drawLayer1()
+
+
+
+
+
+
+
+
+    // function drawBackground(){
+    //   var cvas = document.getElementById('layer2');
+    //   var cxt = cvas.getContext('2d')
+
+    //   cxt.fillStyle = 'green';
+    //   cxt.fillRect(0, 0, 500, 500);
+    // }
+
+    // drawBackground()
 
      var canvas = document.getElementById('layer1');
      var ctx = canvas.getContext('2d')
@@ -191,7 +251,8 @@ function createAudioElement(file){
    }
 
         draw()
-     }
+
+};
 
 
 function randColor(){
@@ -252,6 +313,9 @@ function randRGB(color, value){
     // // calling audioElement will allow the file to be played through the speakers
     // console.log(app.audioElement, ' this is audioElement')
 // }
+
+
+
 
 
 
