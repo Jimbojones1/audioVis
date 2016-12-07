@@ -1,8 +1,41 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: black;
+  padding-top: 0px;
+  padding-left: 0px;
+  margin-top: 0px;
 }
 
 a {
   color: #00B7FF;
+}
+
+canvas {
+  float: left;
+  background-color: white;
+
+}
+
+input[type=range] {
+  float: right;
+  margin-bottom: 13%;
+  background-color: black;
+}
+
+
+ul {
+  display: inline-block;
+  list-style: none;
+  padding: 1%;
+  margin-left: 2%;
+}
+
+audio {
+  float: right;
+  width: 26%;
+  margin-top: 4%;
+}
+
+
 }

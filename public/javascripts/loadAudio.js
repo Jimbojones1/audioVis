@@ -1,7 +1,37 @@
 var app = app || {};
-
+app.value = 'purple';
+app.rValue = '255';
+app.bValue = '255';
+app.gValue =  '255';
 window.onload = function () {
     console.log('audio script loaded');
+
+    var input = document.getElementById('colorInput');
+    var sliderRed = document.getElementById('colorRGB')
+    var sliderGreen = document.getElementById('colorGreen')
+    var sliderBlue = document.getElementById('colorBlue')
+
+    var btn   = document.getElementById('btn');
+
+    sliderRed.addEventListener('input', function(){
+      console.log('something', sliderRed.value)
+      app.rValue = sliderRed.value;
+    })
+
+    sliderBlue.addEventListener('input', function(){
+      console.log('something', sliderBlue.value)
+      app.bValue = sliderBlue.value;
+    })
+
+    sliderGreen.addEventListener('input', function(){
+      console.log('something', sliderGreen.value)
+      app.gValue = sliderGreen.value;
+    })
+
+
+    btn.addEventListener('click', function(){
+      app.value = grabInputValue(input)
+    });
 
     window.addEventListener('drop', onDrop, false);
     window.addEventListener('dragover', onDrag, false);
@@ -11,6 +41,8 @@ window.onload = function () {
         e.preventDefault();
         return false;
     }
+
+
 
     function onDrop(e){
         e.stopPropagation();
@@ -26,6 +58,11 @@ window.onload = function () {
     }
 } // end of window.onload
 
+
+
+function grabInputValue(input){
+  return input.value
+}
 
 function createAudioElement(file){
 
@@ -66,17 +103,17 @@ function createAudioElement(file){
      function draw(){
         requestAnimationFrame(draw);
 
-        ctx.fillStyle = 'rgb(200, 200, 200)';
+        ctx.fillStyle = 'black';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        console.log(arr)
-        console.log(bufferLength, ' this is bufferLength')
+        // console.log(arr)
+        // console.log(bufferLength, ' this is bufferLength')
 
         analyzer.getByteFrequencyData(arr);
 
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = randColor();
-        ctx.beginPath();
+        // ctx.lineWidth = 50;
+        // ctx.strokeStyle = randColor();
+        // ctx.beginPath();
 
       var sliceWidth = 5;
       var x = 0;
@@ -87,45 +124,89 @@ function createAudioElement(file){
         // console.log(v, '----this is v')
 
         // console.log('canvas height: ', canvas.height, " i: ", arr[i])
-        var y = v * canvas.height/2;
+        var y = v * (canvas.height / 2);
 
-        if(i === 0) {
-          ctx.moveTo(x, y);
+        // if(i === 0) {
+        //   // console.log(' if hit', x, y)
+        //   ctx.moveTo(x, y);
+        // }
+        // else {
+        //   // ctx.fillStyle = randColor();
 
-        } else {
+        // }
 
-            ctx.lineTo(x, y);
-             ctx.strokeStyle = randColor();
-            // ctx.lineTo(canvas.width, canvas.height/2);
-            ctx.stroke();
+
+        if (x % 2 === 0 && x % 5 ===0){
+          ctx.fillStyle = app.value
+          ctx.fillRect(x, y, v + 2, 40);
+        }
+        else if (x % 2 === 0){
+          ctx.fillStyle = randRGB('blue', app.gValue);
+          ctx.fillRect(x, y, v + 2, 40);
+        }
+        else {
+          ctx.fillStyle = 'rgb(' + app.rValue + ',' + app.gValue + ',' + app.bValue + ')'
+          ctx.fillRect(x, y, v + 2, 40);
         }
 
-        if (x > 600){
-          x -= sliceWidth;
+        // if (x > 0 && x < 100){
+        //   ctx.fillStyle = randRGB('blue')
+        //    ctx.fillRect(x, y, v + 2, 40);
+        // }
+        // else if(x > 100 && x < 200){
+        //   ctx.fillStyle = randRGB('red')
+        //    ctx.fillRect(x, y, v + 2, 40);
+        // }
+        // else if(x > 200 && x < 400){
+        //   ctx.fillStyle = randRGB('green')
+        //    ctx.fillRect(x, y, v + 2, 40);
+        // }
+        // else {
+        //   ctx.fillStyle = 'white';
+        // }
 
 
-        }
-        else
-          x += sliceWidth;
-      }
 
+          if (x > 600){
+            x -= sliceWidth -100;
+          }
+          else {
+            x += sliceWidth;
+          }
 
+     }// end of for loop
 
-    };
+   }
 
         draw()
      }
 
 
 function randColor(){
-  var r = Math.floor(Math.random() *250);
-  var g = Math.floor(Math.random() *250);
-  var b = Math.floor(Math.random() *250);
+  var r = Math.floor(Math.random() *255);
+  var g = Math.floor(Math.random() *255);
+  var b = Math.floor(Math.random() *255);
 
   return 'rgb(' + r + ',' + g + ',' + b + ')'
 }
 
 
+function randRGB(color, value){
+  var r = Math.floor(Math.random() *250);
+  var g = Math.floor(Math.random() *255) + 100;
+  if (color === 'red'){
+    return 'rgb(' + value + ',' + 255 + ',' + value + ')'
+  }
+  else if(color === 'blue'){
+    return 'rgb(' + value + ',' + value + ',' + 255 + ')'
+  }
+  else {
+    return 'rgb(' + r + ',' + g + ',' + r + ')'
+  }
+
+
+
+}
 
 
 
@@ -164,7 +245,4 @@ function randColor(){
 
 
 
-function createVisualizer(fftSize){
 
-
-}
